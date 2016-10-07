@@ -4,6 +4,7 @@ import (
 	"github.com/Arion-Dsh/kateaNLP/seg"
 	"github.com/Arion-Dsh/kateaNLP/sim"
 	"github.com/Arion-Dsh/kateaNLP/summary"
+	"github.com/Arion-Dsh/kateaNLP/utils"
 )
 
 //KateaNLP init the NLP struct
@@ -12,7 +13,6 @@ func KateaNLP(docs string) *NLP {
 		Docs: docs,
 		Seg:  &seg.Seg{},
 	}
-	nlp.Seg.Load()
 	return nlp
 }
 
@@ -20,6 +20,20 @@ func KateaNLP(docs string) *NLP {
 type NLP struct {
 	Docs string
 	Seg  *seg.Seg
+}
+
+// Download  download the segment model
+func (nlp *NLP) Download() {
+	filePath := utils.GetCurrentFilePath("seg/train.model")
+	err := utils.DownloadFile(filePath, "http://download.Arion.life/nlp/train.model")
+	if err != nil {
+		panic("download model error")
+	}
+}
+
+// Load load the segment model
+func (nlp *NLP) Load() {
+	nlp.Seg.Load()
 }
 
 //Cut cut the docs
